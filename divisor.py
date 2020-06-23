@@ -1,13 +1,22 @@
 import matplotlib.pyplot as plt
 import math
-
 import waypoints_list as wp
 import util
 
 
 class TrackDivisor:
 
-    def __init__(self, waypoints, narrow_gradient_threshold=0.125, wide_gradient_threshold=0.3, pre_corner_range=5, debug=False):
+    def __init__(self, waypoints, narrow_gradient_threshold=0.125, wide_gradient_threshold=0.3, pre_corner_range=3, debug=False):
+        """
+
+        :param waypoints:
+        :param narrow_gradient_threshold:
+        :param wide_gradient_threshold:
+        :param pre_corner_range:
+        :param debug:
+
+
+        """
         self.waypoints = waypoints
         self.num_waypoints = len(waypoints)
         self.narrow_gradient_threshold = narrow_gradient_threshold
@@ -35,24 +44,32 @@ class TrackDivisor:
 
             if abs((narrow_gradient - prev_narrow_gradient)) > self.narrow_gradient_threshold \
                     or abs(wide_gradient - prev_wide_gradient) > self.wide_gradient_threshold:
-                print(waypoint, prev_waypoint, narrow_gradient, wide_gradient)
                 self.corners.append(i)
             else:
                 self.straights.append(i)
 
+            print("Waypoint: {} Prev Waypoint: {} Narrow Gradient: {} Wide Gradient: {}"
+                  .format(waypoint, prev_waypoint, narrow_gradient, wide_gradient))
+
             prev_narrow_gradient = narrow_gradient
             prev_wide_gradient = wide_gradient
-        pass
 
         for entry in self.corners:
             for i in range(0, self.pre_corner_range):
-                if entry - i not in self.corners:
-                    if entry - i in self.straights:
-                        self.straights.remove(entry - i)
+                curr = entry - i
 
-                    self.pre_corners.append(entry - i)
+                if curr not in self.corners:
+                    self.pre_corners.append(curr)
+                    if curr in self.straights:  # This should always be true
+                        self.straights.remove(curr)
 
     def build_lines(self):
+        """
+        Takes the indexes created in the parse_track function and splits them into 3 lists, using data from the
+        waypoints.
+
+        :return: A tuple of lists, in the order straights, corners, pre_corners
+        """
         straights = []
         corners = []
         pre_corners = []
