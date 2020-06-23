@@ -4,13 +4,15 @@ import math
 import waypoints_list as wp
 import util
 
+
 class TrackDivisor:
 
-    def __init__(self, waypoints, narrow_gradient_threshold=0.3, wide_gradient_threshold=0.1, debug=False):
+    def __init__(self, waypoints, narrow_gradient_threshold=0.125, wide_gradient_threshold=0.3, pre_corner_range=5, debug=False):
         self.waypoints = waypoints
         self.num_waypoints = len(waypoints)
         self.narrow_gradient_threshold = narrow_gradient_threshold
         self.wide_gradient_threshold = wide_gradient_threshold
+        self.pre_corner_range = pre_corner_range
         self.debug = debug
 
         self.straights = []
@@ -20,30 +22,51 @@ class TrackDivisor:
         self.parse_track()
 
     def parse_track(self):
-        gradients = []
         prev_narrow_gradient = 0
         prev_wide_gradient = 0
 
         for i in range(0, self.num_waypoints):
             waypoint = self.waypoints[i]
-            prev_waypoint = self.waypoints[max(0, i - 2)]
-            next_waypoint = self.waypoints[min(self.num_waypoints - 1, i + 2)]
+            prev_waypoint = self.waypoints[max(0, i - 1)]
+            next_waypoint = self.waypoints[min(self.num_waypoints - 1, i + 1)]
 
             wide_gradient = util.calculate_gradient(next_waypoint, prev_waypoint)
             narrow_gradient = util.calculate_gradient(waypoint, next_waypoint)
 
-            gradients.append(narrow_gradient)
-
             if abs((narrow_gradient - prev_narrow_gradient)) > self.narrow_gradient_threshold \
                     or abs(wide_gradient - prev_wide_gradient) > self.wide_gradient_threshold:
                 print(waypoint, prev_waypoint, narrow_gradient, wide_gradient)
-                self.corners.append(waypoint)
+                self.corners.append(i)
             else:
-                self.straights.append(waypoint)
+                self.straights.append(i)
 
             prev_narrow_gradient = narrow_gradient
             prev_wide_gradient = wide_gradient
         pass
+
+        for entry in self.corners:
+            for i in range(0, self.pre_corner_range):
+                if entry - i not in self.corners:
+                    if entry - i in self.straights:
+                        self.straights.remove(entry - i)
+
+                    self.pre_corners.append(entry - i)
+
+    def build_lines(self):
+        straights = []
+        corners = []
+        pre_corners = []
+
+        for i in self.straights:
+            straights.append(self.waypoints[i])
+
+        for i in self.corners:
+            corners.append(self.waypoints[i])
+
+        for i in self.pre_corners:
+            pre_corners.append(self.waypoints[i])
+
+        return straights, corners, pre_corners
 
     def print(self):
         """
@@ -55,14 +78,17 @@ class TrackDivisor:
         """
         Displays a graph of the points.
         """
-        straights, = plt.plot([x[0] for x in self.straights], [y[1] for y in self.straights], 'bo')
-        corners, = plt.plot([x[0] for x in self.corners], [y[1] for y in self.corners], 'ro')
-        pre_corners, = plt.plot([x[0] for x in self.pre_corners], [y[1] for y in self.pre_corners], 'go')
+
+        straights, corners, pre_corners = self.build_lines()
+
+        straights_line, = plt.plot([x[0] for x in straights], [y[1] for y in straights], 'o', color='lime')
+        corners_line, = plt.plot([x[0] for x in corners], [y[1] for y in corners], 'o', color='red')
+        pre_corners_line, = plt.plot([x[0] for x in pre_corners], [y[1] for y in pre_corners], 'o', color='gold')
 
         # Graph Config
-        straights.set_antialiased(False)
-        corners.set_antialiased(False)
-        pre_corners.set_antialiased(False)
+        straights_line.set_antialiased(False)
+        corners_line.set_antialiased(False)
+        pre_corners_line.set_antialiased(False)
 
         plt.xlabel('X Coordinates')
         plt.ylabel('Y Coordinates')
@@ -74,5 +100,5 @@ class TrackDivisor:
 
 
 if __name__ == "__main__":
-    divisor = TrackDivisor(wp.REINVENT_2018, debug=False)
+    divisor = TrackDivisor(wp.FUMIAKI_LOOP_2020, debug=False)
     divisor.show_graph()
