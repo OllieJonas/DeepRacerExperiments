@@ -1,8 +1,7 @@
 import matplotlib.pyplot as plt
 
-import configs
-import util
-from divisor_config import DivisorConfig
+from src import util
+from src.divisor_config import DivisorConfig
 
 
 class TrackDivisor:
@@ -154,8 +153,3 @@ class TrackDivisor:
 
         if self.debug:
             self.print()
-
-
-if __name__ == "__main__":
-    divisor = TrackDivisor(configs.REINVENT_2018, debug=False)
-    divisor.show_graph()
