@@ -8,6 +8,24 @@ class DivisorConfig:
                  post_corner_range=1,
                  waypoint_lookahead=1,
                  waypoint_lookbehind=1):
+        """
+
+        :param waypoints: The list of waypoints to use
+
+        Gradient Threshold: If the gradient at this point is above the threshold,
+                            then it will signal the car to change to the red setting.
+                            If the gradient at this point is two times above the threshold,
+                            then it will signal the car to change to the yellow setting
+
+        :param narrow_gradient_threshold: Takes into account the current and the next waypoints
+        :param wide_gradient_threshold: Takes into account the prev / next waypoints based on waypoint lookahead/behind
+        :param use_wide_gradient: Whether to actually use the wide gradient
+        :param distance_threshold: If two adjacent points are above this distance, it will assume green
+        :param pre_corner_range: How many waypoints to indicate as yellow BEFORE reaching a corner
+        :param post_corner_range: How many waypoints to indicate as yellow AFTER reaching a corner
+        :param waypoint_lookahead: How many waypoints to lookahead when calculating wide gradient
+        :param waypoint_lookbehind: How many waypoints to lookbehind when calculating wide gradient
+        """
 
         self.waypoints = waypoints
 

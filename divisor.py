@@ -10,6 +10,7 @@ class TrackDivisor:
     def __init__(self, config: DivisorConfig,
                  debug=False):
         """
+        :param config: The config to use
         :param debug: Toggles debugging
         """
 
@@ -60,7 +61,8 @@ class TrackDivisor:
                 (d_wide_gradient > self.wide_gradient_threshold and self.use_wide_gradient)) \
                     and distance > self.distance_threshold:
 
-                print("Index: {} Waypoint: {} Prev Waypoint: {} Narrow Gradient: {} Wide Gradient: {}"
+                if self.debug:
+                    print("Index: {} Waypoint: {} Prev Waypoint: {} Narrow Gradient: {} Wide Gradient: {}"
                       .format(i, waypoint, prev_waypoint, narrow_gradient - prev_narrow_gradient,
                               wide_gradient - prev_wide_gradient))
                 self.corners.append(i)
