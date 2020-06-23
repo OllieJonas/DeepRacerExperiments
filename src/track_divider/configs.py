@@ -1,4 +1,4 @@
-from src.divisor_config import DivisorConfig
+from src.track_divider.divisor_config import DivisorConfig
 from src import waypoints_list as wp
 
 REINVENT_2018 = DivisorConfig(

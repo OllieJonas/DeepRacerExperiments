@@ -1,7 +1,7 @@
 import matplotlib.pyplot as plt
 
 from src import util
-from src.divisor_config import DivisorConfig
+from src.track_divider.divisor_config import DivisorConfig
 
 
 class TrackDivisor:
