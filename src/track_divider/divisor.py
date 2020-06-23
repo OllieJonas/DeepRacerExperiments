@@ -6,8 +6,7 @@ from src.track_divider.divisor_config import DivisorConfig
 
 class TrackDivisor:
 
-    def __init__(self, config: DivisorConfig,
-                 debug=False):
+    def __init__(self, config: DivisorConfig, debug=False):
         """
         :param config: The config to use
         :param debug: Toggles debugging
@@ -62,8 +61,8 @@ class TrackDivisor:
 
                 if self.debug:
                     print("Index: {} Waypoint: {} Prev Waypoint: {} Narrow Gradient: {} Wide Gradient: {}"
-                      .format(i, waypoint, prev_waypoint, narrow_gradient - prev_narrow_gradient,
-                              wide_gradient - prev_wide_gradient))
+                          .format(i, waypoint, prev_waypoint, narrow_gradient - prev_narrow_gradient,
+                                  wide_gradient - prev_wide_gradient))
                 self.corners.append(i)
 
             # Medium speed
@@ -80,7 +79,6 @@ class TrackDivisor:
             prev_wide_gradient = wide_gradient
 
         # Preparation for entering red zones (ie. corners)
-
         # Less slow leaving a corner
         for entry in self.corners:
             for i in range(0, self.post_corner_range):
@@ -128,28 +126,3 @@ class TrackDivisor:
         Debug printing, currently prints all the way-points.
         """
         [print(x) for x in self.waypoints]
-
-    def show_graph(self):
-        """
-        Displays a graph of the points.
-        """
-
-        straights, corners, pre_corners = self.build_lines()
-
-        straights_line, = plt.plot([x[0] for x in straights], [y[1] for y in straights], 'o', color='lime')
-        corners_line, = plt.plot([x[0] for x in corners], [y[1] for y in corners], 'o', color='red')
-        pre_corners_line, = plt.plot([x[0] for x in pre_corners], [y[1] for y in pre_corners], 'o', color='gold')
-        # highlight, = plt.plot([x[0] for x in self.highlighted], [y[1] for y in self.highlighted], 'o', color='blue')
-
-        # Graph Config
-        straights_line.set_antialiased(False)
-        corners_line.set_antialiased(False)
-        pre_corners_line.set_antialiased(False)
-
-        plt.xlabel('X Coordinates')
-        plt.ylabel('Y Coordinates')
-
-        plt.show()
-
-        if self.debug:
-            self.print()
