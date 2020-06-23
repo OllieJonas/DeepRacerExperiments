@@ -1,52 +1,39 @@
 import matplotlib.pyplot as plt
-import math
-import waypoints_list as wp
+
+import configs
 import util
+from divisor_config import DivisorConfig
 
 
 class TrackDivisor:
 
-    def __init__(self, waypoints,
-                 narrow_gradient_threshold=0.125, wide_gradient_threshold=1.0, use_wide_gradient=True,
-                 distance_threshold=0.08,
-                 pre_corner_range=2, post_corner_range=1,
-                 waypoint_lookahead=1, waypoint_lookbehind=1,
+    def __init__(self, config: DivisorConfig,
                  debug=False):
         """
-
-        :param waypoints:
-        :param narrow_gradient_threshold:
-        :param wide_gradient_threshold:
-        :param use_wide_gradient:
-        :param distance_threshold:
-        :param pre_corner_range:
-        :param post_corner_range:
-        :param waypoint_lookahead:
-        :param waypoint_lookbehind: How many points to turn medium
         :param debug: Toggles debugging
         """
 
-        self.waypoints = waypoints
-        self.num_waypoints = len(waypoints)
+        self.waypoints = config.waypoints
+        self.num_waypoints = len(self.waypoints)
 
-        self.narrow_gradient_threshold = narrow_gradient_threshold
-        self.wide_gradient_threshold = wide_gradient_threshold
-        self.use_wide_gradient = use_wide_gradient
+        self.narrow_gradient_threshold = config.narrow_gradient_threshold
+        self.wide_gradient_threshold = config.wide_gradient_threshold
+        self.use_wide_gradient = config.use_wide_gradient
 
-        self.distance_threshold = distance_threshold
+        self.distance_threshold = config.distance_threshold
 
-        self.pre_corner_range = pre_corner_range
-        self.post_corner_range = post_corner_range
+        self.pre_corner_range = config.pre_corner_range
+        self.post_corner_range = config.post_corner_range
 
-        self.waypoint_lookahead = waypoint_lookahead
-        self.waypoint_lookbehind = waypoint_lookbehind
+        self.waypoint_lookahead = config.waypoint_lookahead
+        self.waypoint_lookbehind = config.waypoint_lookbehind
 
         self.debug = debug
 
         self.straights = []
         self.corners = []
         self.pre_corners = []
-        self.highlighted = [waypoints[x] for x in range(0, 0)]
+        self.highlighted = [self.waypoints[x] for x in range(0, 0)]
 
         self.parse_track()
 
@@ -57,7 +44,7 @@ class TrackDivisor:
         # Gradients
         for i in range(0, self.num_waypoints):
             waypoint = self.waypoints[i]
-            
+
             prev_waypoint = self.waypoints[max(0, i - self.waypoint_lookbehind)]
             next_waypoint = self.waypoints[min(self.num_waypoints - 1, i + self.waypoint_lookahead)]
 
@@ -74,12 +61,13 @@ class TrackDivisor:
                     and distance > self.distance_threshold:
 
                 print("Index: {} Waypoint: {} Prev Waypoint: {} Narrow Gradient: {} Wide Gradient: {}"
-                      .format(i, waypoint, prev_waypoint, narrow_gradient - prev_narrow_gradient, wide_gradient - prev_wide_gradient))
+                      .format(i, waypoint, prev_waypoint, narrow_gradient - prev_narrow_gradient,
+                              wide_gradient - prev_wide_gradient))
                 self.corners.append(i)
 
             # Medium speed
             elif (d_narrow_gradient > self.narrow_gradient_threshold * 2 or
-                  (d_wide_gradient > self.wide_gradient_threshold * 2 and self.use_wide_gradient))\
+                  (d_wide_gradient > self.wide_gradient_threshold * 2 and self.use_wide_gradient)) \
                     and distance > self.distance_threshold * 2:
                 self.pre_corners.append(i)
 
@@ -167,5 +155,5 @@ class TrackDivisor:
 
 
 if __name__ == "__main__":
-    divisor = TrackDivisor(wp.REINVENT_2018, debug=False, use_wide_gradient=True)
+    divisor = TrackDivisor(configs.REINVENT_2018, debug=False)
     divisor.show_graph()
