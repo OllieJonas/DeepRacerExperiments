@@ -60,19 +60,26 @@ class TrackDivisor:
                     and distance > self.distance_threshold:
 
                 if self.debug:
-                    print("Index: {} Waypoint: {} Prev Waypoint: {} Narrow Gradient: {} Wide Gradient: {}"
-                          .format(i, waypoint, prev_waypoint, narrow_gradient - prev_narrow_gradient,
-                                  wide_gradient - prev_wide_gradient))
+                    self.debug_print("RED", i, narrow_gradient, prev_narrow_gradient, prev_waypoint,
+                                     prev_wide_gradient,
+                                     waypoint, wide_gradient)
                 self.corners.append(i)
 
             # Medium speed
             elif (d_narrow_gradient > self.narrow_gradient_threshold * 2 or
                   (d_wide_gradient > self.wide_gradient_threshold * 2 and self.use_wide_gradient)) \
                     and distance > self.distance_threshold * 2:
+                if self.debug:
+                    self.debug_print("YELLOW", i, narrow_gradient, prev_narrow_gradient, prev_waypoint,
+                                     prev_wide_gradient,
+                                     waypoint, wide_gradient)
                 self.pre_corners.append(i)
 
             # Full speed ahead!
             else:
+                self.debug_print("GREEN", i, narrow_gradient, prev_narrow_gradient, prev_waypoint,
+                                     prev_wide_gradient,
+                                     waypoint, wide_gradient)
                 self.straights.append(i)
 
             prev_narrow_gradient = narrow_gradient
@@ -98,6 +105,13 @@ class TrackDivisor:
                     self.pre_corners.append(curr)
                     if curr in self.straights:  # This should always be true
                         self.straights.remove(curr)
+
+    def debug_print(self, colour, i, narrow_gradient, prev_narrow_gradient, prev_waypoint, prev_wide_gradient, waypoint,
+                    wide_gradient):
+        if self.debug:
+            print("{} - Index: {} Waypoint: {} Prev Waypoint: {} Narrow Gradient: {} Wide Gradient: {}"
+                  .format(colour, i, waypoint, prev_waypoint, narrow_gradient - prev_narrow_gradient,
+                          wide_gradient - prev_wide_gradient))
 
     def build_lines(self):
         """

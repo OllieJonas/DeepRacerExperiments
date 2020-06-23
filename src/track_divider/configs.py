@@ -15,8 +15,8 @@ REINVENT_2018 = DivisorConfig(
 
 FUMIAKI_LOOP_2020 = DivisorConfig(
     wp.FUMIAKI_LOOP_2020,
-    narrow_gradient_threshold=0.125,
-    wide_gradient_threshold=1.0,
+    narrow_gradient_threshold=0.15,
+    wide_gradient_threshold=0.5,
     use_wide_gradient=True,
     distance_threshold=0.02,
     pre_corner_range=5,

@@ -28,5 +28,5 @@ class TrackRenderer:
 
         plt.show()
 
-        if self.divisor.debug:
-            self.divisor.print()
+        # if self.divisor.debug:
+        #     self.divisor.print()
