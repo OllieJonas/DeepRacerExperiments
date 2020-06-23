@@ -6,27 +6,47 @@ import util
 
 class TrackDivisor:
 
-    def __init__(self, waypoints, narrow_gradient_threshold=0.125, wide_gradient_threshold=0.3, pre_corner_range=3, debug=False):
+    def __init__(self, waypoints,
+                 narrow_gradient_threshold=0.125, wide_gradient_threshold=1.0, use_wide_gradient=True,
+                 distance_threshold=0.08,
+                 pre_corner_range=2, post_corner_range=1,
+                 waypoint_lookahead=1, waypoint_lookbehind=1,
+                 debug=False):
         """
 
         :param waypoints:
         :param narrow_gradient_threshold:
         :param wide_gradient_threshold:
+        :param use_wide_gradient:
+        :param distance_threshold:
         :param pre_corner_range:
-        :param debug:
-
-
+        :param post_corner_range:
+        :param waypoint_lookahead:
+        :param waypoint_lookbehind: How many points to turn medium
+        :param debug: Toggles debugging
         """
+
         self.waypoints = waypoints
         self.num_waypoints = len(waypoints)
+
         self.narrow_gradient_threshold = narrow_gradient_threshold
         self.wide_gradient_threshold = wide_gradient_threshold
+        self.use_wide_gradient = use_wide_gradient
+
+        self.distance_threshold = distance_threshold
+
         self.pre_corner_range = pre_corner_range
+        self.post_corner_range = post_corner_range
+
+        self.waypoint_lookahead = waypoint_lookahead
+        self.waypoint_lookbehind = waypoint_lookbehind
+
         self.debug = debug
 
         self.straights = []
         self.corners = []
         self.pre_corners = []
+        self.highlighted = [waypoints[x] for x in range(0, 0)]
 
         self.parse_track()
 
@@ -34,26 +54,55 @@ class TrackDivisor:
         prev_narrow_gradient = 0
         prev_wide_gradient = 0
 
+        # Gradients
         for i in range(0, self.num_waypoints):
             waypoint = self.waypoints[i]
-            prev_waypoint = self.waypoints[max(0, i - 1)]
-            next_waypoint = self.waypoints[min(self.num_waypoints - 1, i + 1)]
+            
+            prev_waypoint = self.waypoints[max(0, i - self.waypoint_lookbehind)]
+            next_waypoint = self.waypoints[min(self.num_waypoints - 1, i + self.waypoint_lookahead)]
 
             wide_gradient = util.calculate_gradient(next_waypoint, prev_waypoint)
             narrow_gradient = util.calculate_gradient(waypoint, next_waypoint)
+            distance = util.distance_between(waypoint, next_waypoint)
 
-            if abs((narrow_gradient - prev_narrow_gradient)) > self.narrow_gradient_threshold \
-                    or abs(wide_gradient - prev_wide_gradient) > self.wide_gradient_threshold:
+            d_narrow_gradient = abs(narrow_gradient - prev_narrow_gradient)
+            d_wide_gradient = abs(wide_gradient - prev_wide_gradient)
+
+            # Super slow
+            if (d_narrow_gradient > self.narrow_gradient_threshold or
+                (d_wide_gradient > self.wide_gradient_threshold and self.use_wide_gradient)) \
+                    and distance > self.distance_threshold:
+
+                print("Index: {} Waypoint: {} Prev Waypoint: {} Narrow Gradient: {} Wide Gradient: {}"
+                      .format(i, waypoint, prev_waypoint, narrow_gradient - prev_narrow_gradient, wide_gradient - prev_wide_gradient))
                 self.corners.append(i)
+
+            # Medium speed
+            elif (d_narrow_gradient > self.narrow_gradient_threshold * 2 or
+                  (d_wide_gradient > self.wide_gradient_threshold * 2 and self.use_wide_gradient))\
+                    and distance > self.distance_threshold * 2:
+                self.pre_corners.append(i)
+
+            # Full speed ahead!
             else:
                 self.straights.append(i)
-
-            print("Waypoint: {} Prev Waypoint: {} Narrow Gradient: {} Wide Gradient: {}"
-                  .format(waypoint, prev_waypoint, narrow_gradient, wide_gradient))
 
             prev_narrow_gradient = narrow_gradient
             prev_wide_gradient = wide_gradient
 
+        # Preparation for entering red zones (ie. corners)
+
+        # Less slow leaving a corner
+        for entry in self.corners:
+            for i in range(0, self.post_corner_range):
+                curr = entry - i
+
+                if curr not in self.corners:
+                    self.pre_corners.append(curr)
+                    if curr in self.straights:  # This should always be true
+                        self.straights.remove(curr)
+
+        # Slow down upon entering a corner
         for entry in self.corners:
             for i in range(0, self.pre_corner_range):
                 curr = entry - i
@@ -101,6 +150,7 @@ class TrackDivisor:
         straights_line, = plt.plot([x[0] for x in straights], [y[1] for y in straights], 'o', color='lime')
         corners_line, = plt.plot([x[0] for x in corners], [y[1] for y in corners], 'o', color='red')
         pre_corners_line, = plt.plot([x[0] for x in pre_corners], [y[1] for y in pre_corners], 'o', color='gold')
+        # highlight, = plt.plot([x[0] for x in self.highlighted], [y[1] for y in self.highlighted], 'o', color='blue')
 
         # Graph Config
         straights_line.set_antialiased(False)
@@ -117,5 +167,5 @@ class TrackDivisor:
 
 
 if __name__ == "__main__":
-    divisor = TrackDivisor(wp.FUMIAKI_LOOP_2020, debug=False)
+    divisor = TrackDivisor(wp.REINVENT_2018, debug=False, use_wide_gradient=True)
     divisor.show_graph()

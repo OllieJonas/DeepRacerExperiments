@@ -13,3 +13,13 @@ def calculate_gradient(coord1, coord2):
         return 0
 
     return dy / dx
+
+
+def distance_between(coord1, coord2):
+    dx = coord2[0] - coord1[0]
+    dy = coord2[1] - coord1[1]
+
+    dx_squared = pow(dx, 2)
+    dy_squared = pow(dy, 2)
+
+    return pow(dx_squared + dy_squared, 1/2)
