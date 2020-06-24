@@ -1,8 +1,13 @@
 from src.track_divider.divisor import TrackDivisor
 from src.track_divider.render_track import TrackRenderer
-from src.track_divider import configs
+from src.waypoint_metrics import WaypointMetrics
+
+import src.config.divisor as divisor_configs
+import src.config.gradient as gradients_configs
+import src.config.waypoints as wp
 
 if __name__ == "__main__":
-    divisor = TrackDivisor(configs.REINVENT_2018, debug=True)
+    gradient_calculator = WaypointMetrics(wp.REINVENT_2018, gradients_configs.REINVENT_2018)
+    divisor = TrackDivisor(wp.REINVENT_2018, gradient_calculator, divisor_configs.REINVENT_2018, debug=True)
     renderer = TrackRenderer(divisor)
     renderer.render()

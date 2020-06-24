@@ -1,17 +1,18 @@
-from src import util
-from src.track_divider.divisor_config import DivisorConfig
+from src.config.schemas import DivisorConfig
+from src.waypoint_metrics import WaypointMetrics
 
 
 class TrackDivisor:
-
-    def __init__(self, config: DivisorConfig, debug=False):
+    def __init__(self, waypoints, gradients: WaypointMetrics, config: DivisorConfig, debug=False):
         """
-        :param config: The config to use
+        :param config: The config_schema to use
         :param debug: Toggles debugging
         """
 
-        self.waypoints = config.waypoints
-        self.num_waypoints = len(self.waypoints)
+        self.waypoints = waypoints
+        self.num_waypoints = len(waypoints)
+
+        self.gradients = gradients
 
         self.narrow_gradient_threshold = config.narrow_gradient_threshold
         self.wide_gradient_threshold = config.wide_gradient_threshold
@@ -21,9 +22,6 @@ class TrackDivisor:
 
         self.pre_corner_range = config.pre_corner_range
         self.post_corner_range = config.post_corner_range
-
-        self.waypoint_lookahead = config.waypoint_lookahead
-        self.waypoint_lookbehind = config.waypoint_lookbehind
 
         self.debug = debug
 
@@ -35,53 +33,34 @@ class TrackDivisor:
         self.parse_track()
 
     def parse_track(self):
-        prev_narrow_gradient = 0
-        prev_wide_gradient = 0
-
         # Gradients
         for i in range(0, self.num_waypoints):
-            waypoint = self.waypoints[i]
 
-            prev_waypoint = self.waypoints[max(0, i - self.waypoint_lookbehind)]
-            next_waypoint = self.waypoints[min(self.num_waypoints - 1, i + self.waypoint_lookahead)]
+            d_narrow_gradient = self.gradients.d_narrow_gradients[i]
+            d_wide_gradient = self.gradients.d_wide_gradients[i]
 
-            wide_gradient = util.calculate_gradient(next_waypoint, prev_waypoint)
-            narrow_gradient = util.calculate_gradient(waypoint, next_waypoint)
-            distance = util.distance_between(waypoint, next_waypoint)
+            distance = self.gradients.distances[i]
 
-            d_narrow_gradient = abs(narrow_gradient - prev_narrow_gradient)
-            d_wide_gradient = abs(wide_gradient - prev_wide_gradient)
+            print(d_narrow_gradient)
+            print(d_wide_gradient)
 
             # Super slow
             if (d_narrow_gradient > self.narrow_gradient_threshold or
                 (d_wide_gradient > self.wide_gradient_threshold and self.use_wide_gradient)) \
                     and distance > self.distance_threshold:
 
-                if self.debug:
-                    self.debug_print("RED", i, narrow_gradient, prev_narrow_gradient, prev_waypoint,
-                                     prev_wide_gradient,
-                                     waypoint, wide_gradient)
                 self.corners.append(i)
 
             # Medium speed
             elif (d_narrow_gradient > self.narrow_gradient_threshold * 2 or
                   (d_wide_gradient > self.wide_gradient_threshold * 2 and self.use_wide_gradient)) \
                     and distance > self.distance_threshold * 2:
-                if self.debug:
-                    self.debug_print("YELLOW", i, narrow_gradient, prev_narrow_gradient, prev_waypoint,
-                                     prev_wide_gradient,
-                                     waypoint, wide_gradient)
+
                 self.pre_corners.append(i)
 
             # Full speed ahead!
             else:
-                self.debug_print("GREEN", i, narrow_gradient, prev_narrow_gradient, prev_waypoint,
-                                 prev_wide_gradient,
-                                 waypoint, wide_gradient)
                 self.straights.append(i)
-
-            prev_narrow_gradient = narrow_gradient
-            prev_wide_gradient = wide_gradient
 
         # Preparation for entering red zones (ie. corners)
         # Less slow leaving a corner
