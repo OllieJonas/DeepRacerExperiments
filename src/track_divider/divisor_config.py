@@ -9,14 +9,14 @@ class DivisorConfig:
                  waypoint_lookahead=1,
                  waypoint_lookbehind=1):
         """
-
-        :param waypoints: The list of waypoints to use
+        Configuration file for the track divider.
 
         Gradient Threshold: If the gradient at this point is above the threshold,
                             then it will signal the car to change to the red setting.
                             If the gradient at this point is two times above the threshold,
                             then it will signal the car to change to the yellow setting
 
+        :param waypoints: The list of waypoints to use
         :param narrow_gradient_threshold: Takes into account the current and the next waypoints
         :param wide_gradient_threshold: Takes into account the prev / next waypoints based on waypoint lookahead/behind
         :param use_wide_gradient: Whether to actually use the wide gradient

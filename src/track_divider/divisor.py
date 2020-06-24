@@ -1,5 +1,3 @@
-import matplotlib.pyplot as plt
-
 from src import util
 from src.track_divider.divisor_config import DivisorConfig
 
@@ -78,8 +76,8 @@ class TrackDivisor:
             # Full speed ahead!
             else:
                 self.debug_print("GREEN", i, narrow_gradient, prev_narrow_gradient, prev_waypoint,
-                                     prev_wide_gradient,
-                                     waypoint, wide_gradient)
+                                 prev_wide_gradient,
+                                 waypoint, wide_gradient)
                 self.straights.append(i)
 
             prev_narrow_gradient = narrow_gradient

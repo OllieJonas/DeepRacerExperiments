@@ -3,6 +3,6 @@ from src.track_divider.render_track import TrackRenderer
 from src.track_divider import configs
 
 if __name__ == "__main__":
-    divisor = TrackDivisor(configs.FUMIAKI_LOOP_2020, debug=True)
+    divisor = TrackDivisor(configs.REINVENT_2018, debug=True)
     renderer = TrackRenderer(divisor)
     renderer.render()
