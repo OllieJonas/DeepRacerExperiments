@@ -1,6 +1,6 @@
 from src.track_divider.divisor import TrackDivisor
 from src.track_divider.render_track import TrackRenderer
-from src.waypoint_metrics import WaypointMetrics
+from src.main.waypoint_metrics import WaypointMetrics
 
 import src.config.divisor as divisor_configs
 import src.config.gradient as gradients_configs

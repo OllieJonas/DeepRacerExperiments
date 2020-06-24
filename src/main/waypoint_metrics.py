@@ -1,5 +1,5 @@
 from src.config.schemas import GradientConfig
-import src.util as util
+import src.main.util as util
 
 
 class WaypointMetrics:

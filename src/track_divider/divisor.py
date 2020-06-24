@@ -1,5 +1,5 @@
 from src.config.schemas import DivisorConfig
-from src.waypoint_metrics import WaypointMetrics
+from src.main.waypoint_metrics import WaypointMetrics
 
 
 class TrackDivisor:
