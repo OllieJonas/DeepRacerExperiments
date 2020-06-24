@@ -1,17 +1,17 @@
-from src.track_divider.divisor import TrackDivisor
+from src.track.track import Track
 import matplotlib.pyplot as plt
 
 
 class TrackRenderer:
-    def __init__(self, divisor: TrackDivisor):
-        self.divisor = divisor
+    def __init__(self, track: Track):
+        self.track = track
 
     def render(self):
         """
         Displays a graph of the points.
         """
 
-        straights, corners, pre_corners = self.divisor.build_lines()
+        straights, corners, pre_corners = self.track.divisor.build_lines()
 
         straights_line, = plt.plot([x[0] for x in straights], [y[1] for y in straights], 'o', color='lime')
         corners_line, = plt.plot([x[0] for x in corners], [y[1] for y in corners], 'o', color='red')

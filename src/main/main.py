@@ -1,14 +1,14 @@
-from src.track_divider.divisor import TrackDivisor
-from src.track_divider.render_track import TrackRenderer
-from src.main.waypoint_metrics import WaypointMetrics
-
-import src.config.divisor as divisor_configs
-import src.config.gradient as gradients_configs
 import src.config.waypoints as wp
 
+from src.ui.render_track import TrackRenderer
+from src.track.track import Track
+
+reinvent_2018 = Track(name="Reinvent 2018", waypoints=wp.REINVENT_2018, config_name="REINVENT_2018")
+fumiaki_loop_2020 = Track(name="Fumiaki Loop 2020", waypoints=wp.FUMIAKI_LOOP_2020, config_name="FUMIAKI_LOOP_2020")
+
+
 if __name__ == "__main__":
-    gradient_calculator = WaypointMetrics(wp.REINVENT_2018, gradients_configs.REINVENT_2018)
-    divisor = TrackDivisor(wp.REINVENT_2018, gradient_calculator, divisor_configs.REINVENT_2018, debug=True)
-    renderer = TrackRenderer(divisor)
+
+    renderer = TrackRenderer(reinvent_2018)
     renderer.render()
 

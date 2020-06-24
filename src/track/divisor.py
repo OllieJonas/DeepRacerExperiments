@@ -1,5 +1,5 @@
 from src.config.schemas import DivisorConfig
-from src.main.waypoint_metrics import WaypointMetrics
+from src.track.waypoint_metrics import WaypointMetrics
 
 
 class TrackDivisor:
@@ -12,16 +12,9 @@ class TrackDivisor:
         self.waypoints = waypoints
         self.num_waypoints = len(waypoints)
 
+        self.config = config
+
         self.waypoints_metrics = waypoint_metrics
-
-        self.narrow_gradient_threshold = config.narrow_gradient_threshold
-        self.wide_gradient_threshold = config.wide_gradient_threshold
-        self.use_wide_gradient = config.use_wide_gradient
-
-        self.distance_threshold = config.distance_threshold
-
-        self.pre_corner_range = config.pre_corner_range
-        self.post_corner_range = config.post_corner_range
 
         self.debug = debug
 
@@ -42,16 +35,16 @@ class TrackDivisor:
             distance = self.waypoints_metrics.distances[i]
 
             # Super slow
-            if (d_narrow_gradient > self.narrow_gradient_threshold or
-                (d_wide_gradient > self.wide_gradient_threshold and self.use_wide_gradient)) \
-                    and distance > self.distance_threshold:
+            if (d_narrow_gradient > self.config.narrow_gradient_threshold or
+                (d_wide_gradient > self.config.wide_gradient_threshold and self.config.use_wide_gradient)) \
+                    and distance > self.config.distance_threshold:
 
                 self.corners.append(i)
 
             # Medium speed
-            elif (d_narrow_gradient > self.narrow_gradient_threshold * 2 or
-                  (d_wide_gradient > self.wide_gradient_threshold * 2 and self.use_wide_gradient)) \
-                    and distance > self.distance_threshold * 2:
+            elif (d_narrow_gradient > self.config.narrow_gradient_threshold * 2 or
+                  (d_wide_gradient > self.config.wide_gradient_threshold * 2 and self.config.use_wide_gradient)) \
+                    and distance > self.config.distance_threshold * 2:
 
                 self.pre_corners.append(i)
 
@@ -62,7 +55,7 @@ class TrackDivisor:
         # Preparation for entering red zones (ie. corners)
         # Less slow leaving a corner
         for entry in self.corners:
-            for i in range(0, self.post_corner_range):
+            for i in range(0, self.config.post_corner_range):
                 curr = entry - i
 
                 if curr not in self.corners:
@@ -72,7 +65,7 @@ class TrackDivisor:
 
         # Slow down upon entering a corner
         for entry in self.corners:
-            for i in range(0, self.pre_corner_range):
+            for i in range(0, self.config.pre_corner_range):
                 curr = entry - i
 
                 if curr not in self.corners:
