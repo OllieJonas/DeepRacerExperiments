@@ -16,6 +16,13 @@ def calculate_gradient(coord1, coord2):
 
 
 def distance_between(coord1, coord2):
+    """
+    Calculates the distance between two given coordinates
+
+    :param coord1: The first coordinate
+    :param coord2: The second coordinate
+    :return: The distance between the two
+    """
     dx = coord2[0] - coord1[0]
     dy = coord2[1] - coord1[1]
 
