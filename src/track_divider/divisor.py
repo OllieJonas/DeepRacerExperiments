@@ -3,7 +3,7 @@ from src.waypoint_metrics import WaypointMetrics
 
 
 class TrackDivisor:
-    def __init__(self, waypoints, gradients: WaypointMetrics, config: DivisorConfig, debug=False):
+    def __init__(self, waypoints, waypoint_metrics: WaypointMetrics, config: DivisorConfig, debug=False):
         """
         :param config: The config_schema to use
         :param debug: Toggles debugging
@@ -12,7 +12,7 @@ class TrackDivisor:
         self.waypoints = waypoints
         self.num_waypoints = len(waypoints)
 
-        self.gradients = gradients
+        self.waypoints_metrics = waypoint_metrics
 
         self.narrow_gradient_threshold = config.narrow_gradient_threshold
         self.wide_gradient_threshold = config.wide_gradient_threshold
@@ -36,13 +36,10 @@ class TrackDivisor:
         # Gradients
         for i in range(0, self.num_waypoints):
 
-            d_narrow_gradient = self.gradients.d_narrow_gradients[i]
-            d_wide_gradient = self.gradients.d_wide_gradients[i]
+            d_narrow_gradient = self.waypoints_metrics.d_narrow_gradients[i]
+            d_wide_gradient = self.waypoints_metrics.d_wide_gradients[i]
 
-            distance = self.gradients.distances[i]
-
-            print(d_narrow_gradient)
-            print(d_wide_gradient)
+            distance = self.waypoints_metrics.distances[i]
 
             # Super slow
             if (d_narrow_gradient > self.narrow_gradient_threshold or
