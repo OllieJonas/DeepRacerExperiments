@@ -67,9 +67,12 @@ def circle_metrics(coord1, coord2, coord3, debug=False):
         radius = np.Inf
     else:
         radius = np.sqrt((det_b ** 2 + det_c ** 2 - 4 * det_a * det_d) / (4 * det_a ** 2))
-    print(centre_x, centre_y)
-    print(radius)
-    pass
+
+    return {
+        "coords": [coord1, coord2, coord3],
+        "centre": (centre_x, centre_y),
+        "radius": radius
+    }
 
 
 if __name__ == "__main__":
