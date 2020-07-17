@@ -7,5 +7,5 @@ fumiaki_loop_2020 = Track(name="Fumiaki Loop 2020", waypoints=wp.FUMIAKI_LOOP_20
 
 
 if __name__ == "__main__":
-    renderer = TrackRenderer(fumiaki_loop_2020)
+    renderer = TrackRenderer(reinvent_2018)
     renderer.render()
