@@ -41,7 +41,6 @@ class GradientConfig:
 
 class SpeedConfig:
     def __init__(self, min_corner_speed, possible_speeds: list):
-        self.min_corner_speed = min_corner_speed
         self.possible_speeds = possible_speeds
         self.speed_action_space_size = len(possible_speeds)
         self.min_speed = min(possible_speeds)

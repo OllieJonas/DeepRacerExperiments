@@ -35,9 +35,20 @@ def distance_between(coord1, coord2):
     return pow(dx_squared + dy_squared, 1 / 2)
 
 
-def pretty_print_list(e):
-    for item in e:
-        print(item)
+def pretty_print(d, indent=0):
+    """
+    Pretty prints a dictionary.
+
+    :param d:
+    :param indent:
+    :return:
+    """
+    for key, value in d.items():
+        print('\t' * indent + str(key) + ":")
+        if isinstance(value, dict):
+            pretty_print(value, indent + 1)
+        else:
+            print('\t' * (indent + 1) + str(value))
 
 
 def circle_metrics(coord1, coord2, coord3, debug=False):

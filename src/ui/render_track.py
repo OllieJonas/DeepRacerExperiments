@@ -2,6 +2,17 @@ from src.track.track import Track
 import matplotlib.pyplot as plt
 
 
+def get_speed_colour(speed):
+    if speed == 4:
+        return 'lime'
+    elif speed == 2.67:
+        return 'gold'
+    elif speed == 1.33:
+        return 'red'
+    else:
+        return 'black'
+
+
 class TrackRenderer:
     def __init__(self, track: Track):
         self.track = track
@@ -10,23 +21,13 @@ class TrackRenderer:
         """
         Displays a graph of the points.
         """
-        #
-        # straights, corners, pre_corners = self.track.divisor.build_lines()
-        #
-        # straights_line, = plt.plot([x[0] for x in straights], [y[1] for y in straights], 'o', color='lime')
-        # corners_line, = plt.plot([x[0] for x in corners], [y[1] for y in corners], 'o', color='red')
-        # pre_corners_line, = plt.plot([x[0] for x in pre_corners], [y[1] for y in pre_corners], 'o', color='gold')
-        # # highlight, = plt.plot([x[0] for x in self.highlighted], [y[1] for y in self.highlighted], 'o', color='blue')
-        #
-        # # Graph Config
-        # straights_line.set_antialiased(False)
-        # corners_line.set_antialiased(False)
-        # pre_corners_line.set_antialiased(False)
-        #
-        # plt.xlabel('X Coordinates')
-        # plt.ylabel('Y Coordinates')
-        #
-        # plt.show()
 
-        # if self.divisor.debug:
-        #     self.divisor.print()
+        waypoints = self.track.waypoints
+        speeds = self.track.speed_calculator.speeds
+
+        X = [x[0] for x in waypoints]
+        Y = [y[1] for y in waypoints]
+
+        for i, j in enumerate(X):
+            plt.scatter(X[i], Y[i], color=get_speed_colour(speeds[i]))
+        plt.show()

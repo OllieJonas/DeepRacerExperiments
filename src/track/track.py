@@ -1,8 +1,8 @@
-from src.track.divisor import TrackDivisor
-from src.track.waypoint_metrics import WaypointMetrics
-
 import src.config.configs.divisor as divisor_configs
 import src.config.configs.gradient as gradient_configs
+
+from src.track.waypoint_metrics import WaypointMetrics
+from src.speed.speed_calculator import SpeedCalculator
 
 
 class Track:
@@ -18,6 +18,7 @@ class Track:
         assert self.divisor_config is not None
 
         self.waypoint_metrics = WaypointMetrics(waypoints, self.gradients_config)
+        self.speed_calculator = SpeedCalculator(self.waypoint_metrics, [1.33, 2.67, 4])
         # self.divisor = TrackDivisor(waypoints, self.waypoint_metrics, self.divisor_config)
 
 
