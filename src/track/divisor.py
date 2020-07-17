@@ -1,7 +1,10 @@
 from src.config.schemas import DivisorConfig
 from src.track.waypoint_metrics import WaypointMetrics
 
+import deprecation
 
+
+@deprecation.deprecated()
 class TrackDivisor:
     def __init__(self, waypoints, waypoint_metrics: WaypointMetrics, config: DivisorConfig, debug=False):
         """

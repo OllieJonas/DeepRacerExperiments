@@ -30,3 +30,25 @@ def distance_between(coord1, coord2):
     dy_squared = pow(dy, 2)
 
     return pow(dx_squared + dy_squared, 1/2)
+
+
+def circle_metrics(coord1, coord2, coord3):
+    """
+    Gives metrics about a circle (radius, equation, etc.) based on 3 given points.
+
+    Calculated from here: http://ambrsoft.com/TrigoCalc/Circle3D.htm
+    :param coord1:
+    :param coord2:
+    :param coord3:
+    :return:
+    """
+    x1, y1 = [x for x in coord1]
+    x2, y2 = [x for x in coord2]
+    x3, y3 = [x for x in coord3]
+
+
+    pass
+
+
+if __name__ == "__main__":
+    radius_of_circle([1, 3], [2, 7], [3, 5])

@@ -3,7 +3,6 @@ import src.main.util as util
 
 
 class WaypointMetrics:
-
     def __init__(self, waypoints, config: GradientConfig):
         self.waypoints = waypoints
         self.num_waypoints = len(waypoints)

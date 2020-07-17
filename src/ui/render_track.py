@@ -1,4 +1,4 @@
-from src.track.track import Track
+from src.track import Track
 import matplotlib.pyplot as plt
 
 
