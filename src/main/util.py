@@ -35,6 +35,11 @@ def distance_between(coord1, coord2):
     return pow(dx_squared + dy_squared, 1 / 2)
 
 
+def pretty_print_list(e):
+    for item in e:
+        print(item)
+
+
 def circle_metrics(coord1, coord2, coord3, debug=False):
     """
     Gives metrics about a circle (radius, equation, etc.) based on 3 given points.
@@ -61,11 +66,11 @@ def circle_metrics(coord1, coord2, coord3, debug=False):
     if debug:
         print("A Det: {}. B Det: {}. C Det: {}. D Det: {}".format(det_a, det_b, det_c, det_d))
 
-    centre_x, centre_y = -1 * (det_b / (2 * det_a)), -1 * (det_c / (2 * det_a))
-
     if det_a == 0:
+        centre_x, centre_y = None, None
         radius = np.Inf
     else:
+        centre_x, centre_y = -1 * (det_b / (2 * det_a)), -1 * (det_c / (2 * det_a))
         radius = np.sqrt((det_b ** 2 + det_c ** 2 - 4 * det_a * det_d) / (4 * det_a ** 2))
 
     return {

@@ -17,7 +17,8 @@ class Track:
         assert self.gradients_config is not None
         assert self.divisor_config is not None
 
-        # self.waypoint_metrics = WaypointMetrics(waypoints, self.gradients_config)
+        self.waypoint_metrics = WaypointMetrics(waypoints, self.gradients_config)
         # self.divisor = TrackDivisor(waypoints, self.waypoint_metrics, self.divisor_config)
+
 
 
