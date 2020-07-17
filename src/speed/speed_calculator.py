@@ -11,23 +11,24 @@ class SpeedCalculator:
 
         from bisect import bisect_left
 
-        def take_closest(myList, myNumber):
+        def take_closest(entries, n):
             """
-            Assumes myList is sorted. Returns closest value to myNumber.
+            Assumes entries is sorted. Returns closest value to myNumber.
 
             If two numbers are equally close, return the smallest number.
             """
-            pos = bisect_left(myList, myNumber)
+            pos = bisect_left(entries, n)
             if pos == 0:
-                return myList[0]
-            if pos == len(myList):
-                return myList[-1]
-            before = myList[pos - 1]
-            after = myList[pos]
-            if after - myNumber < myNumber - before:
+                return entries[0]
+            if pos == len(entries):
+                return entries[-1]
+            before = entries[pos - 1]
+            after = entries[pos]
+            if after - n < n - before:
                 return after
             else:
                 return before
 
-        self.speeds = [take_closest(possible_speeds, speed_equation(_constant, m['radius'])) for m in metrics.circle_metrics]
+        self.speeds = [speed_equation(_constant, m['radius']) for m in metrics.circle_metrics]
+        self.rounded_speeds = [take_closest(possible_speeds, x) for x in self.speeds]
         print(self.speeds)

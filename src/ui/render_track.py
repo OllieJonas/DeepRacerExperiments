@@ -23,7 +23,7 @@ class TrackRenderer:
         """
 
         waypoints = self.track.waypoints
-        speeds = self.track.speed_calculator.speeds
+        speeds = self.track.speed_calculator.rounded_speeds
 
         X = [x[0] for x in waypoints]
         Y = [y[1] for y in waypoints]
