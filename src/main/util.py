@@ -1,5 +1,4 @@
-import numpy as np
-
+import src.config.waypoints as wp
 
 def calculate_gradient(coord1, coord2):
     """

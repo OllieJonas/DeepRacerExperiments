@@ -1,3 +1,5 @@
+from tkinter import Canvas
+
 from src.track.track import Track
 import matplotlib.pyplot as plt
 
@@ -14,10 +16,11 @@ def get_speed_colour(speed):
 
 
 class TrackRenderer:
-    def __init__(self, track: Track):
+    def __init__(self, track: Track, canvas: Canvas):
         self.track = track
+        self.canvas = canvas
 
-    def render(self):
+    def render_matplot(self):
         """
         Displays a graph of the points.
         """
