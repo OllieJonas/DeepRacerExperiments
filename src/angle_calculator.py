@@ -1,12 +1,10 @@
 import math
 
-from src.track.waypoint_metrics import WaypointMetrics
-
 _axle_distance = 0.165
 
 
 class AngleCalculator:
-    def __init__(self, waypoints, waypoint_metrics: WaypointMetrics):
+    def __init__(self, waypoints, waypoint_metrics):
         self.waypoints = waypoints
         self.waypoint_metrics = waypoint_metrics
 

@@ -25,7 +25,7 @@ class TrackRenderer:
         Displays a graph of the points.
         """
 
-        waypoints = self.track.waypoints
+        waypoints = self.track.raw_waypoint_data
         speeds = self.track.speed_calculator.rounded_speeds
 
         X = [x[0] for x in waypoints]

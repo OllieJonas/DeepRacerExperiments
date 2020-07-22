@@ -9,8 +9,8 @@ class App:
         self.headless_mode = headless_mode
 
         # Init tracks
-        self.reinvent_2018 = Track(name="Reinvent 2018", waypoints=wp.REINVENT_2018, config_name="REINVENT_2018")
-        self.fumiaki_loop_2020 = Track(name="Fumiaki Loop 2020", waypoints=wp.FUMIAKI_LOOP_2020,
+        self.reinvent_2018 = Track(name="Reinvent 2018", waypoints=wp.REINVENT_2018, track_width=0.5, config_name="REINVENT_2018")
+        self.fumiaki_loop_2020 = Track(name="Fumiaki Loop 2020", waypoints=wp.FUMIAKI_LOOP_2020, track_width=0.5,
                                   config_name="FUMIAKI_LOOP_2020")
 
         self.default_track = self.reinvent_2018  # Default track
