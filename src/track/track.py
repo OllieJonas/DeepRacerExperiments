@@ -1,6 +1,7 @@
 import math
 
 import src.config.configs.gradient as gradient_configs
+from src.track.track_model import TrackModel
 from src.track.waypoint import Waypoint
 
 
@@ -15,20 +16,12 @@ class Track:
 
         self.waypoints = self.process_raw_waypoints_data(waypoints)
 
-        # Min and Max X and Y
-        _x_coords = [x[0] for x in waypoints]
-        _y_coords = [y[1] for y in waypoints]
-
-        self.min_x = min(_x_coords)
-        self.min_y = min(_y_coords)
-
-        self.max_x = max(_x_coords)
-        self.max_y = max(_y_coords)
-
         self.smallest_radius = min([x.circle_radius for x in self.waypoints])
 
         self.update_estimated_speeds(self.smallest_radius, [1.33, 2.67, 4])
         assert self.gradients_config is not None
+
+        self.model = TrackModel(self)
 
         # self.speed_calculator = SpeedCalculator(self.waypoint_metrics, [1.33, 2.67, 4])
 
