@@ -9,5 +9,10 @@ configs = {
     "FUMIAKI_LOOP_2020": GradientConfig(
         waypoint_lookahead=4,
         waypoint_lookbehind=4
+    ),
+
+    "PENTAGON": GradientConfig(
+        waypoint_lookahead=1,
+        waypoint_lookbehind=1
     )
 }

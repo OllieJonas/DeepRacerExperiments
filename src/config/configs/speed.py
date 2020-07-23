@@ -9,5 +9,10 @@ configs = {
     "FUMIAKI_LOOP_2020": SpeedConfig(
         waypoint_lookahead=5,
         waypoint_lookbehind=5
+    ),
+
+    "PENTAGON": SpeedConfig(
+        waypoint_lookahead=1,
+        waypoint_lookbehind=1
     )
 }
