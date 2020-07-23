@@ -1,6 +1,5 @@
 import tkinter as tk
 
-from src.track.track import Track
 from src.track.track_model import TrackModel
 from src.ui.menu_bar import MenuBar
 from src.ui.render_track import TrackRenderer

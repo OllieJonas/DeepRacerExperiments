@@ -26,5 +26,15 @@ class TrackModel:
         self.populate_borders()
 
     def populate_borders(self):
-        for w in self.waypoints:
+        for i, wp in enumerate(self.waypoints):
+            prev = self.waypoints[i - 1]
+            left = self.get_target_point(prev.x, prev.y, wp.x, wp.y, 90, self.track_width / 2)
+            right = self.get_target_point(prev.x, prev.y, wp.x, wp.y, -90, self.track_width / 2)
+
+            self.inner_borders.append(left)
+            self.outer_borders.append(right)
             pass
+
+    def get_target_point(self, x1, y1, x2, y2, direction_offset, distance):
+        direction = math.radians(math.degrees(math.atan2(y2 - y1, x2 - x1)) + direction_offset)
+        return x2 + math.cos(direction) * distance, y2 + math.sin(direction) * distance
