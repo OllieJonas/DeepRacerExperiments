@@ -17,7 +17,7 @@ class App:
 
         # Init UI
         if not headless_mode:
-            self.view = MainView(self, self.fumiaki_loop_2020.model)
+            self.view = MainView(self, self.reinvent_2018.model)
             self.view.update()
             self.view.mainloop()
 

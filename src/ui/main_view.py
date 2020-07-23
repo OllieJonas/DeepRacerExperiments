@@ -5,7 +5,7 @@ from src.track.track_model import TrackModel
 from src.ui.menu_bar import MenuBar
 from src.ui.render_track import TrackRenderer
 
-CANVAS_WIDTH, CANVAS_HEIGHT = 800, 500
+CANVAS_WIDTH, CANVAS_HEIGHT = 1920, 1080
 
 
 class MainView(tk.Frame):
@@ -18,10 +18,8 @@ class MainView(tk.Frame):
         super().__init__(self.root)
 
         # Track Canvas
-        canvas = tk.Canvas(self, bg="black", width=1000, height=800)
-        canvas.bind("<Configure>", self.print_scale)
-        canvas.bind("<Button-1>", self.print_scale)
-        canvas.bind("<Key>", self.print_scale)
+        canvas = tk.Canvas(self, bg="black", width=CANVAS_WIDTH, height=CANVAS_HEIGHT)
+        canvas.bind("<Configure>", self.redraw)
 
         self.renderer = TrackRenderer(track, canvas)
 
@@ -35,7 +33,5 @@ class MainView(tk.Frame):
     def pack_track_canvas(self):
         self.renderer.canvas.pack(fill=tk.BOTH, expand=True, side=tk.LEFT)
 
-    def print_scale(self, event):
-
-        print("Width: {} Height: {}".format(self.winfo_width(), self.winfo_height()))
-        pass
+    def redraw(self, event):
+        self.renderer.redraw(event.width, event.height)

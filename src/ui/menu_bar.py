@@ -8,6 +8,7 @@ class MenuBar:
         self.test_count = 0
 
         self.menubar = Menu(root)
+
         self.add_file_menu()
 
         self.root.config(menu=self.menubar)
