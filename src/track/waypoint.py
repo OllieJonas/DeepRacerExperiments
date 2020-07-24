@@ -4,12 +4,14 @@ from src.util import maths as maths_util
 
 
 class Waypoint:
-    def __init__(self, pos, x, y):
+    def __init__(self, pos, x, y, interpolated=False):
 
         # Defined fields
         self.pos = pos
         self.x = x
         self.y = y
+
+        self.interpolated = interpolated=False
 
         # Calculated fields
         self.prev_raw = (0, 0)

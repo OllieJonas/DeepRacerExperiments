@@ -16,6 +16,8 @@ class Track:
 
         self.waypoints = self.process_raw_waypoints_data(waypoints)
 
+        self.interpolated_waypoints = self.interpolate_waypoints(self.waypoints)
+
         self.smallest_radius = min([x.circle_radius for x in self.waypoints])
 
         self.update_estimated_speeds(self.smallest_radius, [1.33, 2.67, 4])
@@ -46,3 +48,10 @@ class Track:
             constant = min(possible_speeds) / smallest_radius ** 0.5
         for wp in self.waypoints:
             wp.update_speed(possible_speeds, constant)
+
+    def interpolate_waypoints(self, waypoints):
+        interpolated_waypoints = []
+        for i, wp in enumerate(waypoints):
+            pass
+
+        return interpolated_waypoints

@@ -55,8 +55,6 @@ class TrackRenderer:
         self.x_border = (1 - self.scale / x_scale) / 2 * self.track.x_size
         self.y_border = (1 - self.scale / y_scale) / 2 * self.track.y_size
 
-        print(self.x_border, self.y_border)
-
     def draw(self, waypoint_size=3):
         self.draw_waypoints(granularity=20, size=waypoint_size)
         self.draw_borders()
@@ -65,8 +63,11 @@ class TrackRenderer:
         assert granularity > 0
 
         colour_range = list(Color("red").range_to(Color("lime"), granularity + 1))
-        for w in self.track.waypoints:
-            self.draw_dot(w.x, w.y, size, colour_from_speed(w.estimated_speed, min_speed=1.33, max_speed=4, colour_range=colour_range))
+        prev = self.track.waypoints[-1]
+
+        for i, w in enumerate(self.track.waypoints):
+            self.plot_line(prev.x, prev.y, w.x, w.y, size, colour_from_speed(w.estimated_speed, min_speed=1.33, max_speed=4, colour_range=colour_range))
+            prev = w
 
     def draw_borders(self):
         length = len(self.track.outer_borders)
@@ -79,14 +80,11 @@ class TrackRenderer:
             curr_out = self.track.outer_borders[i]
             curr_in = self.track.inner_borders[i]
 
-
-
-            # c = colour_range[i % len(colour_range) - 1]
-            # colour = Color(rgb=(c[0] / 255, c[1] / 255, c[2] / 255))
+            colour_str = "LavenderBlush"
 
             if curr_out is not prev_out and curr_out is not prev_out:
-                self.plot_line(prev_in[0], prev_in[1], curr_in[0], curr_in[1], 2, Color("blue"))
-                self.plot_line(prev_out[0], prev_out[1], curr_out[0], curr_out[1], 2, Color("blue"))
+                self.plot_line(prev_in[0], prev_in[1], curr_in[0], curr_in[1], 2, Color(colour_str))
+                self.plot_line(prev_out[0], prev_out[1], curr_out[0], curr_out[1], 2, Color(colour_str))
 
             prev_out = curr_out
             prev_in = curr_in
@@ -106,13 +104,6 @@ class TrackRenderer:
         y2_line = (self.track.max_y - y2 + self.y_border) * self.scale
 
         self.canvas.create_line(x_line, y_line, x2_line, y2_line, fill=fill_colour, width=width)
-
-    # # Jesus this is crude
-    # def generate_rainbow(self, spacing=1):
-    #     red = [255] * int(255 / spacing) * 3 + list(range(255, 0, -1 * spacing)) + [0] * (int(255 / spacing) * 2) + list(range(0, 143, 1 * spacing))
-    #     green = list(range(0, 255, max(int(0.5 * spacing), 1))) + [255] * int(255 / spacing) * 2 + list(range(255, 0, -1 * spacing))
-    #     blue = [0] * (int(255 / spacing) * 4) + list(range(0, 255, 1 * spacing)) + list(range(255, 130, -1 * spacing)) + list(range(130, 255, 1 * spacing))
-    #     return list(zip(red, green, blue))
 
 
 
