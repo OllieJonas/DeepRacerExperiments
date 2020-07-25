@@ -74,7 +74,7 @@ def calculate_circle_metrics(coord1, coord2, coord3, debug=False):
     if debug:
         print("A Det: {}. B Det: {}. C Det: {}. D Det: {}".format(det_a, det_b, det_c, det_d))
 
-    if det_a == 0:
+    if det_a == 0:  # ie. The three points form a straight line
         centre_x, centre_y = None, None
         radius = math.inf
     else:

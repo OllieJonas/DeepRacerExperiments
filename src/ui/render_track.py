@@ -66,7 +66,11 @@ class TrackRenderer:
         prev = self.track.waypoints[-1]
 
         for i, w in enumerate(self.track.waypoints):
-            self.plot_line(prev.x, prev.y, w.x, w.y, size, colour_from_speed(w.estimated_speed, min_speed=1.33, max_speed=4, colour_range=colour_range))
+            self.draw_line(prev.x, prev.y, w.x, w.y, size, colour_from_speed(w.estimated_speed, min_speed=1.33, max_speed=4, colour_range=colour_range), arrow='last')
+
+            if 70 < i < 80:
+                self.draw_circle(w.circle_centre[0], w.circle_centre[1], w.circle_radius, outline="white")
+            # self.draw_dot(w.x, w.y, size, colour_from_speed(w.estimated_speed, min_speed=1.33, max_speed=4, colour_range=colour_range))
             prev = w
 
     def draw_borders(self):
@@ -83,27 +87,40 @@ class TrackRenderer:
             colour_str = "LavenderBlush"
 
             if curr_out is not prev_out and curr_out is not prev_out:
-                self.plot_line(prev_in[0], prev_in[1], curr_in[0], curr_in[1], 2, Color(colour_str))
-                self.plot_line(prev_out[0], prev_out[1], curr_out[0], curr_out[1], 2, Color(colour_str))
+                self.draw_line(prev_in[0], prev_in[1], curr_in[0], curr_in[1], 2, Color(colour_str))
+                self.draw_line(prev_out[0], prev_out[1], curr_out[0], curr_out[1], 2, Color(colour_str))
 
             prev_out = curr_out
             prev_in = curr_in
 
-    def draw_dot(self, x, y, r, colour):
+    def transform_coordinates(self, x, y):
         x = (x - self.track.min_x - self.x_border) * self.scale
         y = (self.track.max_y - y + self.y_border) * self.scale
 
+        return x, y
+
+    def draw_dot(self, x, y, r, colour):
+        x, y = self.transform_coordinates(x, y)
+
         self.canvas.create_oval(x - r, y - r, x + r, y + r, fill=colour, width=0)
 
-    def plot_line(self, x1, y1, x2, y2, width, fill_colour):
+    def draw_line(self, x1, y1, x2, y2, width, fill_colour, arrow=''):
+        x_line, y_line = self.transform_coordinates(x1, y1)
+        x2_line, y2_line = self.transform_coordinates(x2, y2)
 
-        x_line = (x1 - self.track.min_x - self.x_border) * self.scale
-        y_line = (self.track.max_y - y1 + self.y_border) * self.scale
+        self.canvas.create_line(x_line, y_line, x2_line, y2_line, fill=fill_colour, width=width, arrow=arrow)
 
-        x2_line = (x2 - self.track.min_x - self.x_border) * self.scale
-        y2_line = (self.track.max_y - y2 + self.y_border) * self.scale
+    def draw_circle(self, x, y, r, fill="", outline=""):
+        x, y = self.transform_coordinates(x, y)
 
-        self.canvas.create_line(x_line, y_line, x2_line, y2_line, fill=fill_colour, width=width)
+        r *= self.scale
 
+        x0 = x - r
+        y0 = y - r
+        x1 = x + r
+        y1 = y + r
+
+
+        self.canvas.create_oval(x0, y0, x1, y1, fill=fill, outline=outline)
 
 

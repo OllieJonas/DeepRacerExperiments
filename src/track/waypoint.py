@@ -11,10 +11,11 @@ class Waypoint:
         self.x = x
         self.y = y
 
-        self.interpolated = interpolated=False
+        self.interpolated = interpolated
 
         # Calculated fields
         self.prev_raw = (0, 0)
+        self.curr_raw = (x, y)
         self.next_raw = (0, 0)
 
         self.circle_radius = 0
@@ -28,7 +29,7 @@ class Waypoint:
         self.prev_raw = tuple(prev_raw)
         self.next_raw = tuple(next_raw)
 
-        circle_metrics = maths_util.calculate_circle_metrics(prev_raw, [self.x, self.y], next_raw)
+        circle_metrics = maths_util.calculate_circle_metrics(prev_raw, self.curr_raw, next_raw)
         self.circle_centre = circle_metrics['centre']
         self.circle_radius = circle_metrics['radius']
 

@@ -1,6 +1,7 @@
 import math
 
 import src.config.configs.gradient as gradient_configs
+from src.path.angle_calculator import AngleCalculator
 from src.track.track_model import TrackModel
 from src.track.waypoint import Waypoint
 
@@ -27,7 +28,9 @@ class Track:
 
         # self.speed_calculator = SpeedCalculator(self.waypoint_metrics, [1.33, 2.67, 4])
 
-        # self.angle_calculator = AngleCalculator(waypoints, self.waypoint_metrics)
+        self.angle_calculator = AngleCalculator(self.waypoints)
+        print(self.angle_calculator.angles)
+
         # self.divisor = TrackDivisor(waypoints, self.waypoint_metrics, self.divisor_config)
 
     def process_raw_waypoints_data(self, raw_waypoints):
